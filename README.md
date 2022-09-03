@@ -15,6 +15,6 @@ with
 for example
 
 ```
-./x-scap -url https://kreuzwerker.de/post/well-architected-framework-review-part-v-cost-optimization -tags aws,serverless
+./x-scap -url https://kreuzwerker.de/post/aws-re-inforce-2022 -tags aws,security,cloud
 ``` 
 
