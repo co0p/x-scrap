@@ -10,7 +10,7 @@ import (
 
 func Print(out io.Writer, res usecases.ScrapingResult) {
 
-	fmt.Fprintf(out, "url: %s\n", res.Url)
+	fmt.Fprintf(out, "\nurl: %s\n", res.Url)
 	fmt.Fprintln(out, "-----------------------")
 	w := tabwriter.NewWriter(out, 1, 1, 1, ' ', 0)
 

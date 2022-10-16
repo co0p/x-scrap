@@ -15,17 +15,20 @@ func main() {
 	colly := scraper.NewColly()
 	usecase := usecases.Scraping{Scraper: &colly}
 
-	cmd, err := cli.Execute(os.Args)
+	cmds, err := cli.Execute(os.Args)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed parsing input: %s\n", err)
 		os.Exit(1)
 	}
 
-	res, err := usecase.Scrape(cmd)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "failed scraping: %s\n", err)
-		os.Exit(1)
-	}
+	for _, cmd := range cmds {
 
-	clipkg.Print(os.Stdout, res)
+		res, err := usecase.Scrape(cmd)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "failed scraping: %s\n", err)
+			os.Exit(1)
+		}
+
+		clipkg.Print(os.Stdout, res)
+	}
 }
