@@ -8,34 +8,34 @@ import (
 )
 
 type Scraper interface {
-	Scrape(url *url.URL) ([]string, error)
+	Paragraphs(url *url.URL) ([]string, error)
 }
 
-type ScrapingCmd struct {
+type FindTagsCmd struct {
 	Url  string
 	Tags []string
 }
 
-type ScrapingResult struct {
+type FindTagsResult struct {
 	Url     string
 	Tags    []string
 	Matches map[string]int
 }
 
-type Scraping struct {
+type FindTagsUsecase struct {
 	Scraper Scraper
 }
 
-func (s Scraping) Scrape(cmd ScrapingCmd) (ScrapingResult, error) {
+func (s FindTagsUsecase) FindTags(cmd FindTagsCmd) (FindTagsResult, error) {
 
 	u, err := url.Parse(cmd.Url)
 	if err != nil {
-		return ScrapingResult{}, errors.New("given url is not parsable: " + err.Error())
+		return FindTagsResult{}, errors.New("given url is not parsable: " + err.Error())
 	}
 
-	paragraphs, err := s.Scraper.Scrape(u)
+	paragraphs, err := s.Scraper.Paragraphs(u)
 	if err != nil {
-		return ScrapingResult{}, errors.New("failed scraping: " + err.Error())
+		return FindTagsResult{}, errors.New("failed extracting paragraphs: " + err.Error())
 	}
 
 	rgx := regexp.MustCompile(strings.Join(cmd.Tags, "|"))
@@ -48,7 +48,7 @@ func (s Scraping) Scrape(cmd ScrapingCmd) (ScrapingResult, error) {
 		}
 	}
 
-	return ScrapingResult{
+	return FindTagsResult{
 		Url:     cmd.Url,
 		Tags:    cmd.Tags,
 		Matches: matches,

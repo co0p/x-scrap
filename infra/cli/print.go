@@ -8,7 +8,7 @@ import (
 	"github.com/co0p/x-scrap/usecases"
 )
 
-func Print(out io.Writer, res usecases.ScrapingResult) {
+func Print(out io.Writer, res usecases.FindTagsResult) {
 
 	fmt.Fprintf(out, "\nurl: %s\n", res.Url)
 	fmt.Fprintln(out, "-----------------------")
