@@ -4,48 +4,35 @@ import (
 	"errors"
 	"flag"
 	"strings"
-
-	"github.com/co0p/x-scrap/usecases"
 )
+
+type CliCommand struct {
+	URLs []string
+	Tags []string
+}
 
 type CLI struct{}
 
-func NewCLI() CLI {
-	return CLI{}
-}
-
-func (cli *CLI) Execute(args []string) ([]usecases.ScrapingCmd, error) {
+func (cli *CLI) Execute(args []string) (CliCommand, error) {
 
 	flags := flag.NewFlagSet("", flag.ContinueOnError)
-	urls := flags.String("url", "", "the urls to scrape (comma <,> separated)")
-	taglist := flags.String("tags", "", "comma seperated list of tags")
+	urls := flags.String("urls", "", "urls to scrape (comma <,> separated)")
+	taglist := flags.String("tags", "", "tags to scan for (comma <,> separated)")
 
 	flags.Parse(args[1:])
 
 	if len(*urls) == 0 {
-		return []usecases.ScrapingCmd{}, errors.New("flag '-url' must not be empty")
+		return CliCommand{}, errors.New("flag '-urls' must not be empty")
 	}
 
 	if len(*taglist) == 0 {
-		return []usecases.ScrapingCmd{}, errors.New("flag '-tags' must not be empty")
+		return CliCommand{}, errors.New("flag '-tags' must not be empty")
 	}
 
-	cmds := extractCommands(urls, taglist)
-
-	return cmds, nil
-
-}
-
-func extractCommands(urls *string, taglist *string) []usecases.ScrapingCmd {
-	separatedUrls := strings.Split(*urls, ",")
-	separatedTags := strings.Split(*taglist, ",")
-	cmds := make([]usecases.ScrapingCmd, len(separatedUrls))
-
-	for i, url := range separatedUrls {
-		cmds[i] = usecases.ScrapingCmd{
-			Url:  url,
-			Tags: separatedTags,
-		}
+	cmd := CliCommand{
+		URLs: strings.Split(*urls, ","),
+		Tags: strings.Split(*taglist, ","),
 	}
-	return cmds
+
+	return cmd, nil
 }
