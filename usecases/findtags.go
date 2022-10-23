@@ -38,13 +38,13 @@ func (s FindTagsUsecase) FindTags(cmd FindTagsCmd) (FindTagsResult, error) {
 		return FindTagsResult{}, errors.New("failed extracting paragraphs: " + err.Error())
 	}
 
-	rgx := regexp.MustCompile(strings.Join(cmd.Tags, "|"))
+	rgx := regexp.MustCompile("(?i)" + strings.Join(cmd.Tags, "|"))
 	matches := make(map[string]int)
 	for _, p := range paragraphs {
 		found := rgx.FindAllString(p, -1)
-
 		for _, match := range found {
-			matches[match] = matches[match] + 1
+			tag := strings.ToLower(match)
+			matches[tag]++
 		}
 	}
 
